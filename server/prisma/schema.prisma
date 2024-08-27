@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  name  String
+  email String  @unique
+  password String
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+  enterprises Enterprise[]
+   
+}
+
+model Enterprise {
+  id          Int     @id @default(autoincrement())
+  name        String
+  nip         Int
+  regon       Int 
+  region      String
+  city        String
+  postalCode  Int
+  street      String
+  houseNumber Int
+  roomNumber  Int
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  departments Department[]
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+}
+
+model Department {
+  id        Int     @id @default(autoincrement())
+  name     String
+  enterprise Enterprise @relation(fields: [enterpriseId], references: [id])
+  enterpriseId Int
+  workers   Worker[]
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+}
+model Worker {
+  id        Int     @id @default(autoincrement())
+  name     String
+  secondName String
+  surname     String
+  region String
+  city String
+  postalCode Int
+  street String
+  houseNumber Int
+  roomNumber Int
+  pesel Int
+  mail String 
+  phone Int
+  position String
+  department Department  @relation(fields: [departmentId], references: [id])
+  departmentId Int
+  trainings Training[]
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+}
+model Training {
+  id        Int     @id @default(autoincrement())
+  name     String
+  worker Worker  @relation(fields: [workerId], references: [id])
+  workerId Int
+  content String
+  deadline DateTime
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+}
