@@ -1,24 +1,22 @@
 import express from "express";
+import * as trainingController from "../controllers/trainingController";
 
 export const trainingRouter = express.Router();
 // get all trainings you own
-trainingRouter.get("/");
+trainingRouter
+  .route("/")
+  // get Trainings
+  .get(trainingController.getAllTrainings)
+  // create department
+  .post(trainingController.createTraining);
 
 trainingRouter
   .route("/:id")
-  .get((req, res) => {
-    // get one training
-    res.send("get user");
-  })
-  // create training
-  .post((req, res) => {
-    res.send("register");
-  })
-  // edit training
-  .put((req, res) => {
-    res.send("Update user");
-  })
-  // delete training
-  .delete((req, res) => {
-    res.send("Delete user");
-  });
+  // get one Training
+  .get(trainingController.getTraining)
+  // edit Training
+  .put(trainingController.editTraining)
+  // delete Training
+  .delete(trainingController.deleteTraining);
+
+export default trainingRouter;

@@ -1,24 +1,20 @@
 import express from "express";
-
+import * as departmentController from "../controllers/departmentController";
 export const departmentRouter = express.Router();
-// get all departments you own
-departmentRouter.get("/");
+departmentRouter
+  .route("/")
+  // get departments
+  .get(departmentController.getAllDepartments)
+  // create department
+  .post(departmentController.createDepartment);
 
 departmentRouter
   .route("/:id")
-  .get((req, res) => {
-    // get one department
-    res.send("get user");
-  })
-  // create department
-  .post((req, res) => {
-    res.send("register");
-  })
+  // get one department
+  .get(departmentController.getDepartment)
   // edit department
-  .put((req, res) => {
-    res.send("Update user");
-  })
+  .put(departmentController.editDepartment)
   // delete department
-  .delete((req, res) => {
-    res.send("Delete user");
-  });
+  .delete(departmentController.deleteDepartment);
+
+export default departmentRouter;
