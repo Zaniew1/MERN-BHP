@@ -12,12 +12,12 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
+  id    Int            @id @default(autoincrement())
   name  String
-  email String  @unique
+  email String         @unique
   password String
-  createdAt DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  modifiedAt DateTime  @updatedAt
   enterprises Enterprise[]
    
 }
@@ -25,7 +25,7 @@ model User {
 model Enterprise {
   id          Int     @id @default(autoincrement())
   name        String
-  nip         Int
+  nip         Int     @unique
   regon       Int 
   region      String
   city        String
@@ -33,10 +33,10 @@ model Enterprise {
   street      String
   houseNumber Int
   roomNumber  Int
-  author User @relation(fields: [authorId], references: [id])
+  author User         @relation(fields: [authorId], references: [id])
   authorId Int
   departments Department[]
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   modifiedAt DateTime @updatedAt
 
 }
