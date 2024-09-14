@@ -1,7 +1,7 @@
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 import express, { Request, Response } from "express";
-import { authRouter } from "./routes/authRoute";
+import { authRouter } from "./auth/routes/authRoute";
 import { userRouter } from "./routes/userRoute";
 import { enterpriseRouter } from "./routes/enterpriseRoute";
 import { departmentRouter } from "./routes/departmentRoute";
