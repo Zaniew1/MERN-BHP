@@ -1,6 +1,13 @@
 import catchAsync from "../utils/catchAsync";
 import { RequestHandler, Request, Response, NextFunction } from "express";
 
+import { z } from "zod";
+
+const Department = z.object({
+  name: z.string().min(4).max(100),
+});
+export type Department = z.infer<typeof Department>;
+
 export const createDepartment: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
     status: "successfully created department",
