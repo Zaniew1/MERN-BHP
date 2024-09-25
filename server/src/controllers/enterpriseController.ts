@@ -1,51 +1,63 @@
 import catchAsync from "../utils/catchAsync";
 import { RequestHandler, Request, Response, NextFunction } from "express";
-import { z } from "zod";
-
-const Enterprise = z.object({
-  name: z.string().min(4).max(100),
-  nip: z.number().gt(9).lt(11).int().positive(),
-  regon: z.number().gt(13).lt(15).int().positive().optional(),
-  region: z.string().min(2).max(100).optional(),
-  city: z.string().min(2).max(100).optional(),
-  postalcode: z.string().optional(),
-  street: z.string().min(3).max(150).optional(),
-  houseNumber: z.number().gt(0).lt(10000).optional(),
-  roomNumber: z.number().gt(0).lt(1000).optional(),
-});
-export type Enterprise = z.infer<typeof Enterprise>;
+import { DatabaseInstance } from "../utils/database";
+import { newEnterpriseSchema, newEnterpriseType } from "../utils/zodSchemas/enterpriseSchema";
 
 export const createEnterprise: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  Enterprise.parse(req.body);
+  newEnterpriseSchema.parse(req.body);
+  const { name, nip, regon, region, city, postalcode, street, houseNumber, roomNumber } = req.body as newEnterpriseType;
+  const enterprise = await DatabaseInstance.create("department", { name, nip, regon, region, city, postalcode, street, houseNumber, roomNumber });
 
-  res.status(200).json({
+  res.status(201).json({
     status: "successfully created enterprises",
+    data: {
+      enterprise,
+    },
   });
 });
 export const deleteEnterprise: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.body as { id: number };
+  const enterprise = await DatabaseInstance.delete("department", id);
   res.status(200).json({
     status: "successfully deleted enterprises",
+    data: {
+      enterprise,
+    },
   });
 });
 export const editEnterprise: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  newEnterpriseSchema.parse(req.body);
+  const { name, nip, regon, region, city, postalcode, street, houseNumber, roomNumber } = req.body as newEnterpriseType;
+  const enterprise = await DatabaseInstance.update("department", { name, nip, regon, region, city, postalcode, street, houseNumber, roomNumber });
+
   res.status(200).json({
     status: "successfully edited enterprises",
+    data: {
+      enterprise,
+    },
   });
 });
 export const getEnterprise: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.body as { id: number };
+  const enterprise = await DatabaseInstance.findById("enterprise", id);
   res.status(200).json({
     status: "successfully get enterprises",
+    data: {
+      enterprise,
+    },
   });
 });
 export const getAllEnterprises: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    res.status(200).json({
-      status: "success get all enterprises",
-      data: {
-        enterprises: "123",
-      },
-    });
-  } catch (e) {
-    console.log(e);
-  }
+  const { id } = req.body as { id: number };
+  const enterprises = await DatabaseInstance.findBy("enterprise", {
+    where: {
+      authorId: id,
+    },
+  });
+  res.status(200).json({
+    status: "success get all enterprises",
+    data: {
+      enterprises,
+    },
+  });
 });

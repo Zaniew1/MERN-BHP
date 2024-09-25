@@ -1,5 +1,6 @@
 import catchAsync from "../utils/catchAsync";
 import { RequestHandler, Request, Response, NextFunction } from "express";
+import { DatabaseInstance } from "../utils/database";
 
 import { z } from "zod";
 
@@ -24,30 +25,42 @@ export const createWorker: RequestHandler<{ id: string }> = catchAsync(async (re
     status: "successfully created worker",
   });
 });
-export const deleteWorker: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({
-    status: "successfully deleted worker",
-  });
-});
 export const editWorker: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
     status: "successfully edited worker",
   });
 });
+export const deleteWorker: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.body as { id: number };
+  const worker = await DatabaseInstance.delete("worker", id);
+  res.status(200).json({
+    status: "successfully deleted worker",
+    data: {
+      worker,
+    },
+  });
+});
 export const getWorker: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.body as { id: number };
+  const worker = await DatabaseInstance.findById("worker", id);
   res.status(200).json({
     status: "successfully get worker",
+    data: {
+      worker,
+    },
   });
 });
 export const getAllWorkers: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    res.status(200).json({
-      status: "success",
-      data: {
-        workers: "123",
-      },
-    });
-  } catch (e) {
-    console.log(e);
-  }
+  const { id } = req.body as { id: number };
+  const workers = await DatabaseInstance.findBy("worker", {
+    where: {
+      departmentId: id,
+    },
+  });
+  res.status(200).json({
+    status: "success",
+    data: {
+      workers,
+    },
+  });
 });
