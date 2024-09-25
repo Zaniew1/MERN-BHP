@@ -4,6 +4,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["omitApi"]
 }
 
 datasource db {
@@ -16,8 +17,7 @@ model User {
   name  String
   surname String
   email String         @unique
-  password String
-  confirmPassword String? 
+  password String      
   passwordResetToken String?
   passwordResetExpires Int?
   createdAt DateTime   @default(now())

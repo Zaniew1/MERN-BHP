@@ -1,3 +1,6 @@
+import { UserType } from "./zodSchemas/userSchema";
+import { PrismaClient } from "@prisma/client";
+
 const Table = {
   enterprise: Symbol("enterprise"),
   department: Symbol("department"),
@@ -8,17 +11,15 @@ const Table = {
 
 type TableType = keyof typeof Table;
 
-import { PrismaClient } from "@prisma/client";
-
 const prisma = new PrismaClient();
 
 interface DatabaseInterface {
-  create(table: TableType, data: object): Promise<void | object>;
+  create(table: TableType, data: object): Promise<UserType>;
   update(table: TableType, data: object): Promise<void | object>;
   delete(table: TableType, id: number): Promise<void | object>;
   findBy(table: TableType, data: object): Promise<void | object>;
+  findMany(table: TableType): Promise<void | object>;
   findById(table: TableType, id: number): Promise<void | object>;
-  findMany(table: TableType): object;
 }
 
 class Database implements DatabaseInterface {
@@ -48,6 +49,7 @@ class Database implements DatabaseInterface {
 
 class PrismaDatabase implements DatabaseInterface {
   constructor() {}
+
   public async create(table: TableType, data: object) {
     const prismaModel = prisma[table] as any;
     return await prismaModel.create(data);
@@ -74,9 +76,6 @@ class PrismaDatabase implements DatabaseInterface {
     try {
       const prismaModel = prisma[table] as any;
       return await prismaModel.findUnique({
-        omit: {
-          password: true,
-        },
         where: {
           id: id,
         },
@@ -88,7 +87,7 @@ class PrismaDatabase implements DatabaseInterface {
   public async findMany(table: TableType) {
     try {
       const prismaModel = prisma[table] as any;
-      return await prismaModel.findMany();
+      return await prismaModel.findMany({});
     } catch (e) {
       console.log(e);
     }
