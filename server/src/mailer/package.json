@@ -1,0 +1,30 @@
+{
+  "name": "mailer",
+  "version": "1.0.0",
+  "description": "mailer app",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zaniew1/MERN-Mailer.git"
+  },
+  "keywords": [
+    "mailer"
+  ],
+  "author": "Mateusz Zaniewski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zaniew1/MERN-Mailer/issues"
+  },
+  "homepage": "https://github.com/Zaniew1/MERN-Mailer#readme",
+  "dependencies": {
+    "@types/nodemailer": "^6.4.16",
+    "@types/typescript": "^2.0.0",
+    "dotenv": "^16.4.5",
+    "nodemailer": "^6.9.15",
+    "typescript": "^5.6.3"
+  }
+}
