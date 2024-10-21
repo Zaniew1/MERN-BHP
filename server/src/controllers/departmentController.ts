@@ -1,7 +1,7 @@
 import catchAsync from "../utils/catchAsync";
 import { RequestHandler, Request, Response, NextFunction } from "express";
 import { DatabaseInstance } from "../utils/database";
-
+import { OK, CREATED } from "../utils/constants/http";
 import { z } from "zod";
 
 const Department = z.object({
@@ -9,30 +9,31 @@ const Department = z.object({
 });
 export type Department = z.infer<typeof Department>;
 
-export const createDepartment: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({
+export const createDepartment: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  res.status(CREATED).json({
     status: "successfully created department",
   });
 });
+export const editDepartment: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  res.status(OK).json({
+    status: "successfully edited department",
+  });
+});
+
 export const deleteDepartment: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.body as { id: number };
   const department = await DatabaseInstance.delete("department", id);
-  res.status(200).json({
+  res.status(OK).json({
     status: "successfully deleted department",
     data: {
       department,
     },
   });
 });
-export const editDepartment: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({
-    status: "successfully edited department",
-  });
-});
 export const getDepartment: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.body as { id: number };
   const department = await DatabaseInstance.findById("department", id);
-  res.status(200).json({
+  res.status(OK).json({
     status: "successfully  get department",
     data: {
       department,
@@ -46,7 +47,7 @@ export const getAllDepartments: RequestHandler<{ id: string }> = catchAsync(asyn
       enterpriseId: id,
     },
   });
-  res.status(200).json({
+  res.status(OK).json({
     status: "success get all departments",
     data: {
       departments,

@@ -2,9 +2,14 @@ import catchAsync from "../utils/catchAsync";
 import { RequestHandler, Request, Response, NextFunction } from "express";
 import { DatabaseInstance } from "../utils/database";
 
-export const createTraining: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const createTraining: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
     status: "successfully created training",
+  });
+});
+export const editTraining: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  res.status(200).json({
+    status: "successfully edited training",
   });
 });
 export const deleteTraining: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -15,11 +20,6 @@ export const deleteTraining: RequestHandler<{ id: string }> = catchAsync(async (
     data: {
       training,
     },
-  });
-});
-export const editTraining: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({
-    status: "successfully edited training",
   });
 });
 export const getTraining: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

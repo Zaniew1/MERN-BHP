@@ -1,7 +1,7 @@
 import catchAsync from "../utils/catchAsync";
 import { RequestHandler, Request, Response, NextFunction } from "express";
 import { DatabaseInstance } from "../utils/database";
-import { z } from "zod";
+// import { z } from "zod";
 // const UserSchema = z.object({
 //   name: z.string().min(4).max(100),
 //   surname: z.string().min(4).max(100),
@@ -9,7 +9,7 @@ import { z } from "zod";
 // });
 // export type UserType = z.infer<typeof UserSchema>;
 
-export const editUser: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const editUser: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { id, name, surname } = req.body;
   const user = await DatabaseInstance.update("user", { where: { id }, data: { name, surname } });
   res.status(200).json({

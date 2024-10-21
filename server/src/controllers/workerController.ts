@@ -20,12 +20,12 @@ const Worker = z.object({
 });
 export type Worker = z.infer<typeof Worker>;
 
-export const createWorker: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const createWorker: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
     status: "successfully created worker",
   });
 });
-export const editWorker: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const editWorker: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
     status: "successfully edited worker",
   });
