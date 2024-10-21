@@ -7,5 +7,10 @@ const getEnv = (key: string, defaultVal?: string): string => {
   return value;
 };
 
-export const AUTH_USERNAME = getEnv("AUTH_USERNAME", "development");
-export const AUTH_PASSWORD = getEnv("AUTH_PASSWORD", "000");
+export const MAILER_STATUS = getEnv("MAILER_STATUS", "dev");
+export const MAILER_USERNAME = getEnv("MAILER_USERNAME", "m.zaniewski1995@gmail.com");
+export const MAILER_PASSWORD = getEnv("MAILER_PASSWORD", "0000");
+export const MAILER_PORT = getEnv("MAILER_PORT", "587");
+export const MAILER_HOST = getEnv("MAILER_PORT", "smtp.gmail.com");
+export const MAILER_SERVICE = getEnv("MAILER_SERVICE", "gmail");
+export const MAILER_FROM = getEnv("MAILER_FROM", "BHP_project@gmail.com");
