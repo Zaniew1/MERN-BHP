@@ -7,30 +7,15 @@ import { enterpriseRouter } from "./routes/enterpriseRoute";
 import { departmentRouter } from "./routes/departmentRoute";
 import { workerRouter } from "./routes/workerRoute";
 import { trainingRouter } from "./routes/trainingRoute";
+import { PORT } from "./auth/constants/env";
 import morgan from "morgan";
-// import { PrismaClient } from "@prisma/client";
 
-// const prisma = new PrismaClient();
-const port = process.env.PORT;
 const app = express();
 
-// async function database() {}
-// database()
-//   .then(async () => {
-//     await prisma.$disconnect();
-//   })
-//   .catch(async (e) => {
-//     console.error(e);
-//     await prisma.$disconnect();
-//     process.exit(1);
-//   });
-
 app.use(morgan("dev"));
-app.get("/", async (req: Request, res: Response) => {
-  res.send("Hello, this is your backend!");
-});
-app.listen(port, () => {
-  console.log("Server running on port:" + port);
+
+app.listen(PORT, () => {
+  console.log("Server running on port:" + PORT);
 });
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
