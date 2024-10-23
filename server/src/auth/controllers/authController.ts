@@ -4,6 +4,7 @@ import AppError from "../utils/appError";
 import { DatabaseInstance } from "../../utils/database";
 import { JWT } from "../helpers/Jwt";
 import { PasswordManage } from "../helpers/PasswordManage";
+import Mailer from "../../mailer/mailer";
 import { newUserSchema, newUserType, loginUserType } from "../../utils/zodSchemas/userSchema";
 export const register: RequestHandler<{ id: string }> = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const newUser = newUserSchema.parse(req.body) as newUserType;
@@ -15,7 +16,7 @@ export const register: RequestHandler<{ id: string }> = catchAsync(async (req: R
   }
   const newPassword = await PasswordManage.hashPassword(password);
   // we send email with welcome Card component as welcome message
-  // await new Email(email, name).sendWelcome();
+  await new Mailer(email, name).sendWelcome();
   // we create user
   const user = await DatabaseInstance.create("user", { data: { name, surname, email, password: newPassword } });
 

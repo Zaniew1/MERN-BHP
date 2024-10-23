@@ -1,15 +1,15 @@
 import cookieParser from "cookie-parser";
 import "dotenv/config";
-import express, { Request, Response } from "express";
+import express from "express";
 import { authRouter } from "./auth/routes/authRoute";
 import { userRouter } from "./routes/userRoute";
 import { enterpriseRouter } from "./routes/enterpriseRoute";
 import { departmentRouter } from "./routes/departmentRoute";
 import { workerRouter } from "./routes/workerRoute";
 import { trainingRouter } from "./routes/trainingRoute";
-import { PORT } from "./auth/constants/env";
+// import { PORT } from "./auth/constants/env";
 import morgan from "morgan";
-
+const PORT = 5000;
 const app = express();
 
 app.use(morgan("dev"));
