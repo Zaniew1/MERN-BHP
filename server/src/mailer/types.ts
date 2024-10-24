@@ -7,12 +7,12 @@ export interface NodeMailerInterface {
 export interface ExtendedMailType extends BasicMailType {
   message?: string;
   subject?: string;
-  template?: string;
+  html?: string;
   attachments?: {
-    content: string;
-    filename: string;
-    type: string;
-    disposition: string;
+    content?: string;
+    filename?: string;
+    type?: string;
+    disposition?: string;
   }[];
 }
 export interface BasicMailType {

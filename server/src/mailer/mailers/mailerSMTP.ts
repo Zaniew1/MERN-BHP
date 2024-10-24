@@ -1,61 +1,81 @@
 import nodemailer from "nodemailer";
-import { MAILER_PASSWORD, MAILER_USERNAME, MAILER_HOST, MAILER_PORT, MAILER_SERVICE, MAILER_STATUS, MAILER_FROM } from "../constants/env";
+import {
+  MAILER_PROD_PASSWORD,
+  MAILER_PROD_USERNAME,
+  MAILER_PROD_HOST,
+  MAILER_PROD_PORT,
+  MAILER_PROD_SERVICE,
+  MAILER_STATUS,
+  MAILER_PROD_FROM,
+  MAILER_TEST_USERNAME,
+  MAILER_TEST_PASSWORD,
+  MAILER_TEST_HOST,
+  MAILER_TEST_FROM,
+  MAILER_TEST_PORT,
+  MAILER_TEST_SERVICE,
+} from "../constants/env";
 import pug from "pug";
 import { htmlToText } from "html-to-text";
 import { NodeMailerInterface, ExtendedMailType, BasicMailType } from "../types";
 
 export default class SMTPMailer implements NodeMailerInterface {
-  private from: string = `BHP Project <${MAILER_FROM}>`;
+  private from: string = `BHP Project <${MAILER_STATUS === "prod" ? MAILER_PROD_FROM : MAILER_TEST_FROM}>`;
   constructor() {}
   public async send(sendingOptions: ExtendedMailType) {
     const mailOptions = {
       from: this.from,
       to: sendingOptions.email,
       subject: sendingOptions.subject,
-      html: sendingOptions.template ?? this.renderTemplate(sendingOptions),
+      html: sendingOptions.html,
       text: sendingOptions.message ?? htmlToText(this.renderTemplate(sendingOptions)),
       attachments: sendingOptions.attachments,
     };
-    await this.createNewTransport().sendMail(mailOptions);
+    await this.createNewTransport()?.sendMail(mailOptions);
   }
   private renderTemplate(sendingOptions: ExtendedMailType) {
-    return pug.renderFile(`./views/${sendingOptions.template}.pug`, {
+    return pug.renderFile(`../views/${sendingOptions.html}.pug`, {
       name: sendingOptions.name,
       url: sendingOptions.url,
       subject: sendingOptions.subject,
     });
   }
   private createNewTransport() {
+    console.log(MAILER_STATUS);
     if (MAILER_STATUS === "prod") {
+      //sendgrid
       return nodemailer.createTransport({
-        service: MAILER_SERVICE,
-        host: MAILER_HOST,
-        port: Number(MAILER_PORT),
+        service: MAILER_PROD_SERVICE,
+        host: MAILER_PROD_HOST,
+        port: Number(MAILER_PROD_PORT),
         secure: false,
         auth: {
-          user: MAILER_USERNAME,
-          pass: MAILER_PASSWORD,
+          user: MAILER_PROD_USERNAME,
+          pass: MAILER_PROD_PASSWORD,
         },
       });
     }
-    //mailtrap
-    return nodemailer.createTransport({
-      service: "mailtrap",
-      host: "sandbox.smtp.mailtrap.io",
-      port: 587,
-      secure: false,
-      auth: {
-        user: "0b8185f5d7e9b9",
-        pass: "af2d335962654e",
-      },
-    });
+
+    //mailtrap - ready
+    if (MAILER_STATUS === "dev") {
+      return nodemailer.createTransport({
+        host: MAILER_TEST_HOST,
+        port: Number(MAILER_TEST_PORT),
+        secure: false,
+        auth: {
+          user: MAILER_TEST_USERNAME,
+          pass: MAILER_TEST_PASSWORD,
+        },
+      });
+    }
   }
   public async sendWelcome(options: BasicMailType) {
-    const extendedOptions = { ...options, template: "welcome", subject: "Welcome in my application" };
+    const html = this.renderTemplate({ ...options, html: "welcome" });
+    const extendedOptions = { ...options, html, subject: "Welcome in my application" };
     await this.send(extendedOptions);
   }
   public async sendResetPassword(options: BasicMailType) {
-    const extendedOptions = { ...options, template: "reset", subject: "It seems that you want to reset your password" };
+    const html = this.renderTemplate({ ...options, html: "reset" });
+    const extendedOptions = { ...options, html, subject: "It seems that you want to reset your password" };
     await this.send(extendedOptions);
   }
 }

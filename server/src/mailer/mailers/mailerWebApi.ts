@@ -1,37 +1,27 @@
 import nodemailer from "nodemailer";
 import { MailtrapTransport } from "mailtrap";
-import fetch from "node-fetch";
-
-import {
-  MAILER_WEBAPI_TOKEN,
-  MAILER_PASSWORD,
-  MAILER_USERNAME,
-  MAILER_HOST,
-  MAILER_PORT,
-  MAILER_SERVICE,
-  MAILER_STATUS,
-  MAILER_FROM,
-  MAILER_COMPANY_NAME,
-  MAILER_DOMAIN_NAME,
-} from "../constants/env";
+import { MAILER_STATUS, MAILER_WEBAPI_TOKEN, MAILER_TEST_FROM, SENDGRID_API_KEY } from "../constants/env";
+import sgMail from "@sendgrid/mail";
 import { NodeMailerInterface, ExtendedMailType, BasicMailType } from "../types";
 
-class WebApiMailer implements NodeMailerInterface {
+export default class WebApiMailer implements NodeMailerInterface {
   constructor() {}
   async send(options: ExtendedMailType) {
     if (MAILER_STATUS === "prod") {
       return this.sendProd(options);
     }
-    this.createNewTransport()
-      .sendMail({
-        from: MAILER_FROM,
-        to: options.email,
-        subject: options.subject,
-        text: options.message,
-        category: "",
-        sandbox: true,
-      })
-      .then(console.log, console.error);
+    // if (MAILER_STATUS === "dev") {
+    //   this.createNewTransport()
+    //     .sendMail({
+    //       from: MAILER_TEST_FROM,
+    //       to: options.email,
+    //       subject: options.subject,
+    //       text: options.message,
+    //       category: "",
+    //       sandbox: true,
+    //     })
+    //     .then(console.log, console.error);
+    // }
   }
   private createNewTransport() {
     return nodemailer.createTransport(
@@ -50,31 +40,32 @@ class WebApiMailer implements NodeMailerInterface {
     await this.send(extendedOptions);
   }
   private async sendProd(options: ExtendedMailType) {
-    const url = "https://send.api.mailtrap.io/api/send";
-    const sendOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Api-Token": "123",
-      },
-      body: `{"to":[{"email":"${options.email}","name":"${
-        options.name
-      }"}], "from":{"email":"${MAILER_FROM}","name":"${MAILER_COMPANY_NAME}"},"attachments":[{"content":"${
-        options.attachments.content ?? ""
-      }","filename":"${options.attachments.filename}","type":"${
-        options.attachments.type
-      }","disposition":"attachment"}],"headers":{"X-Message-Source":"${MAILER_DOMAIN_NAME}"},"subject":"${options.subject}","text":"${
-        options.message
-      }","category":"", "html":""}`,
-    };
+    // const attachments = options.attachments
+    //   ? options.attachments.map((attachment) => ({
+    //       content: attachment.content || "",
+    //       filename: attachment.filename || "",
+    //       type: attachment.type || "",
+    //       disposition: attachment.disposition || "attachment",
+    //     }))
+    //   : [];
 
-    try {
-      const response = await fetch(url, sendOptions);
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
+    const sendOptions = {
+      to: options.email,
+      from: MAILER_TEST_FROM,
+      // attachments: attachments.length ? attachments : undefined, // Only include if there are attachments
+      subject: options.subject || "No Subject",
+      text: options.message || "asd",
+      html: options.html || "asd", // Handle HTML content
+      category: "", // If you have a category, set it here
+    };
+    sgMail.setApiKey(SENDGRID_API_KEY);
+    sgMail
+      .send(sendOptions)
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }

@@ -1,14 +1,16 @@
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 import express from "express";
-import { authRouter } from "./auth/routes/authRoute";
-import { userRouter } from "./routes/userRoute";
-import { enterpriseRouter } from "./routes/enterpriseRoute";
-import { departmentRouter } from "./routes/departmentRoute";
-import { workerRouter } from "./routes/workerRoute";
-import { trainingRouter } from "./routes/trainingRoute";
+// import { authRouter } from "./auth/routes/authRoute";
+// import { userRouter } from "./routes/userRoute";
+// import { enterpriseRouter } from "./routes/enterpriseRoute";
+// import { departmentRouter } from "./routes/departmentRoute";
+// import { workerRouter } from "./routes/workerRoute";
+// import { trainingRouter } from "./routes/trainingRoute";
 // import { PORT } from "./auth/constants/env";
+import { SmtpMailer, ApiMailer } from "./mailer/mailer";
 import morgan from "morgan";
+import "dotenv/config";
 const PORT = 5000;
 const app = express();
 
@@ -25,11 +27,12 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(cookieParser());
-app.use(`/api/${process.env.VERSION}/auth`, authRouter);
-app.use(`/api/${process.env.VERSION}/users`, userRouter);
-app.use(`/api/${process.env.VERSION}/enterprises`, enterpriseRouter);
-app.use(`/api/${process.env.VERSION}/departments`, departmentRouter);
-app.use(`/api/${process.env.VERSION}/workers`, workerRouter);
-app.use(`/api/${process.env.VERSION}/trainings`, trainingRouter);
+// ApiMailer.send({ name: "Mateusz", email: "m.zaniewski1995@gmail.com", message: "asd" });
+// app.use(`/api/${process.env.VERSION}/auth`, authRouter);
+// app.use(`/api/${process.env.VERSION}/users`, userRouter);
+// app.use(`/api/${process.env.VERSION}/enterprises`, enterpriseRouter);
+// app.use(`/api/${process.env.VERSION}/departments`, departmentRouter);
+// app.use(`/api/${process.env.VERSION}/workers`, workerRouter);
+// app.use(`/api/${process.env.VERSION}/trainings`, trainingRouter);
 
 export default app;

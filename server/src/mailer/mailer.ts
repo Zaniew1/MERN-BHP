@@ -1,5 +1,6 @@
 import { NodeMailerInterface, ExtendedMailType, BasicMailType } from "./types";
 import SMTPMailer from "./mailers/mailerSMTP";
+import WebApiMailer from "./mailers/mailerWebApi";
 class Mailer implements NodeMailerInterface {
   private mailerClass: NodeMailerInterface;
   constructor(mailerClass: NodeMailerInterface) {
@@ -17,4 +18,4 @@ class Mailer implements NodeMailerInterface {
 }
 
 export const SmtpMailer = new Mailer(new SMTPMailer());
-export const WebApiMailer = new Mailer(new SMTPMailer());
+export const ApiMailer = new Mailer(new WebApiMailer());
