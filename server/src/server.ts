@@ -7,7 +7,6 @@ import { enterpriseRouter } from "./routes/enterpriseRoute";
 import { departmentRouter } from "./routes/departmentRoute";
 import { workerRouter } from "./routes/workerRoute";
 import { trainingRouter } from "./routes/trainingRoute";
-import { PORT } from "./auth/constants/env";
 import morgan from "morgan";
 import "dotenv/config";
 const PORT = 5000;
