@@ -2,8 +2,6 @@ import nodemailer from "nodemailer";
 import {
   MAILER_PROD_PASSWORD,
   MAILER_PROD_USERNAME,
-  MAILER_PROD_HOST,
-  MAILER_PROD_PORT,
   MAILER_PROD_SERVICE,
   MAILER_STATUS,
   MAILER_PROD_FROM,
@@ -40,21 +38,16 @@ export default class SMTPMailer implements NodeMailerInterface {
     });
   }
   private createNewTransport() {
-    console.log(MAILER_STATUS);
     if (MAILER_STATUS === "prod") {
-      //sendgrid
+      //sendgrid - ready
       return nodemailer.createTransport({
         service: MAILER_PROD_SERVICE,
-        host: MAILER_PROD_HOST,
-        port: Number(MAILER_PROD_PORT),
-        secure: false,
         auth: {
           user: MAILER_PROD_USERNAME,
           pass: MAILER_PROD_PASSWORD,
         },
       });
     }
-
     //mailtrap - ready
     if (MAILER_STATUS === "dev") {
       return nodemailer.createTransport({
